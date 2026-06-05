@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mess Manager Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0d13;
+  --bg2: #11141c;
+  --bg3: #181c27;
+  --card: #1c2030;
+  --card2: #22273a;
+  --border: #2a3050;
+  --border2: #364070;
+  --accent: #f0c040;
+  --accent2: #e8a020;
+  --green: #3dd68c;
+  --red: #f05060;
+  --blue: #4a9eff;
+  --purple: #9b7ff4;
+  --cyan: #2dd4bf;
+  --text: #e8ecf4;
+  --text2: #9aa0bc;
+  --text3: #525878;
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+  --r: 14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(240,192,64,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,192,64,.025) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:0 20px 100px;}
+
+/* ── Header ── */
+header{display:flex;align-items:center;justify-content:space-between;padding:24px 0 28px;border-bottom:1px solid var(--border);margin-bottom:30px;}
+.logo{display:flex;align-items:center;gap:14px;}
+.logo-icon{width:46px;height:46px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.logo h1{font-size:21px;font-weight:800;letter-spacing:-.5px;}
+.logo span{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.live-badge{background:var(--card);border:1px solid var(--border);border-radius:50px;padding:7px 16px;font-size:12px;color:var(--text2);font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:7px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ── Month bar ── */
+.topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:28px;}
+.topbar .fg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:120px;}
+.topbar label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-family:'JetBrains Mono',monospace;}
+.topbar input,.topbar select{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:13px;width:100%;}
+.topbar input:focus,.topbar select:focus{outline:none;border-color:var(--accent);}
+.tbar-div{width:1px;height:36px;background:var(--border);align-self:center;}
+
+/* ── Steps nav ── */
+.steps{display:flex;gap:8px;margin-bottom:30px;overflow-x:auto;padding-bottom:4px;}
+.sbtn{flex-shrink:0;background:var(--card);border:1px solid var(--border);color:var(--text2);padding:9px 18px;border-radius:50px;cursor:pointer;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:8px;}
+.sbtn .n{width:20px;height:20px;border-radius:50%;background:var(--bg3);font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.sbtn.active{background:var(--accent);border-color:var(--accent);color:#000;}
+.sbtn.active .n{background:rgba(0,0,0,.2);}
+.sbtn.done{border-color:var(--green);color:var(--green);}
+.sbtn.done .n{background:var(--green);color:#000;}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:24px;}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.ct{font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px;}
+.ci{font-size:19px;}
+
+/* ── Stat row ── */
+.srow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;position:relative;overflow:hidden;}
+.sc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.sc.y::after{background:var(--accent)}.sc.g::after{background:var(--green)}.sc.b::after{background:var(--blue)}.sc.r::after{background:var(--red)}.sc.p::after{background:var(--purple)}.sc.c::after{background:var(--cyan)}
+.sl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;font-family:'JetBrains Mono',monospace;}
+.sv{font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+.sv.y{color:var(--accent)}.sv.g{color:var(--green)}.sv.b{color:var(--blue)}.sv.r{color:var(--red)}.sv.p{color:var(--purple)}.sv.c{color:var(--cyan)}
+
+/* ── Buttons ── */
+.btn{padding:10px 20px;border-radius:10px;border:none;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.btn-y{background:var(--accent);color:#000;}.btn-y:hover{background:var(--accent2);transform:translateY(-1px);}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--text2);}.btn-o:hover{border-color:var(--accent);color:var(--accent);}
+.btn-g{background:var(--green);color:#000;}.btn-g:hover{opacity:.9;transform:translateY(-1px);}
+.btn-d{background:rgba(240,80,96,.12);border:1px solid rgba(240,80,96,.25);color:var(--red);}.btn-d:hover{background:rgba(240,80,96,.22);}
+.btn-b{background:rgba(74,158,255,.12);border:1px solid rgba(74,158,255,.25);color:var(--blue);}.btn-b:hover{background:rgba(74,158,255,.22);}
+.btn-sm{padding:7px 13px;font-size:12px;border-radius:8px;}
+
+/* ── Forms ── */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;font-family:'JetBrains Mono',monospace;}
+input,select{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:10px 13px;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:13px;transition:border-color .2s;width:100%;}
+input:focus,select:focus{outline:none;border-color:var(--accent);}
+input::placeholder{color:var(--text3);}
+input[type=number]::-webkit-inner-spin-button{opacity:.4;}
+
+/* ── Table ── */
+.tw{overflow-x:auto;border-radius:11px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:13px;}
+thead tr{background:var(--bg3);}
+th{padding:12px 15px;text-align:left;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:600;border-bottom:1px solid var(--border);}
+td{padding:12px 15px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tbody tr{transition:background .15s;}
+tbody tr:hover{background:var(--card2);}
+.tfr{background:var(--bg3)!important;}
+.tfr td{font-weight:700;border-top:2px solid var(--border2);color:var(--accent);}
+.cn{font-family:'Syne',sans-serif;font-weight:600;font-size:14px;}
+.pos{color:var(--green);font-weight:700;}
+.neg{color:var(--red);font-weight:700;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:50px;font-size:11px;font-weight:600;}
+.bg{background:rgba(61,214,140,.12);color:var(--green);border:1px solid rgba(61,214,140,.25);}
+.br{background:rgba(240,80,96,.12);color:var(--red);border:1px solid rgba(240,80,96,.25);}
+.by{background:rgba(240,192,64,.12);color:var(--accent);border:1px solid rgba(240,192,64,.25);}
+.bb{background:rgba(74,158,255,.12);color:var(--blue);border:1px solid rgba(74,158,255,.25);}
+
+/* ── Alert ── */
+.al{padding:11px 16px;border-radius:9px;margin-bottom:16px;font-size:13px;display:flex;align-items:flex-start;gap:9px;line-height:1.5;}
+.ali{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);color:var(--blue);}
+.als{background:rgba(61,214,140,.08);border:1px solid rgba(61,214,140,.25);color:var(--green);}
+.alw{background:rgba(240,192,64,.08);border:1px solid rgba(240,192,64,.25);color:var(--accent);}
+
+/* ── Panel ── */
+.panel{display:none;}
+.panel.active{display:block;animation:fadeIn .3s;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Section header ── */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.st{display:flex;align-items:center;gap:11px;}
+.stag{background:var(--accent);color:#000;padding:4px 11px;border-radius:50px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
+.st h2{font-size:19px;font-weight:700;}
+
+/* ── Member input rows ── */
+.mrow{display:grid;grid-template-columns:1fr 1fr 1fr 36px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.mrow:last-child{border-bottom:none;}
+.delbtn{width:32px;height:32px;border-radius:7px;background:rgba(240,80,96,.1);border:1px solid rgba(240,80,96,.2);color:var(--red);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.delbtn:hover{background:rgba(240,80,96,.25);}
+.addbtn{width:100%;padding:11px;border-radius:9px;border:1px dashed var(--border2);background:transparent;color:var(--text3);cursor:pointer;font-family:'Syne',sans-serif;font-size:13px;margin-top:10px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.addbtn:hover{border-color:var(--accent);color:var(--accent);background:rgba(240,192,64,.04);}
+
+/* ── Fixed cat row ── */
+.catrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.catrow:last-child{border-bottom:none;}
+.catrow input{flex:1;}
+.catrow .catname{flex:2;}
+
+/* ── Floating action bar ── */
+.fab{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:50px;padding:9px 14px;display:flex;gap:9px;z-index:100;box-shadow:var(--shadow);}
+
+/* ── Empty ── */
+.empty{text-align:center;padding:56px 20px;color:var(--text3);}
+.empty .ei{font-size:44px;margin-bottom:14px;}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* ── Print ── */
+@media print{
+  body{background:#fff!important;color:#000!important;}
+  body::before{display:none;}
+  header,.steps,.topbar,.btn,.fab,.mrow input,.mrow .delbtn,.addbtn,.sh .btn,.al,.catrow,.card .ch .btn{display:none!important;}
+  .panel{display:block!important;}
+  .card{border:1px solid #ccc!important;background:#fff!important;box-shadow:none!important;page-break-inside:avoid;margin-bottom:16px;}
+  table{font-size:11px!important;}
+  th,td{padding:7px 10px!important;border-color:#ccc!important;color:#000!important;}
+  .badge{border:1px solid #999!important;}
+  .bg{background:#e0ffe0!important;color:#006600!important;}
+  .br{background:#ffe0e0!important;color:#cc0000!important;}
+  .pos{color:#006600!important;}
+  .neg{color:#cc0000!important;}
+  .wrap{max-width:100%;padding:0;}
+  .tfr{background:#f0f0f0!important;}
+  .tfr td{color:#000!important;}
+  thead tr{background:#eee!important;}
+  .srow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  .sc{border:1px solid #ccc!important;background:#f8f8f8!important;flex:1;min-width:120px;}
+  .sv{color:#000!important;font-size:18px!important;}
+  .sl{color:#555!important;}
+  .pt{display:block!important;}
+}
+.pt{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🏠</div>
+    <div>
+      <h1>Mess Manager Pro</h1>
+      <span>মেস খরচ ব্যবস্থাপনা · v2.0</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge"><div class="dot"></div><span id="curMonLabel">—</span></div>
+  </div>
+</header>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="fg"><label>মাস</label><input type="text" id="messMonth" value="April 2026" oninput="updateLabel()"></div>
+  <div class="tbar-div"></div>
+  <div class="fg"><label>Mess নাম</label><input type="text" id="messName" value="মেস ২০২৬"></div>
+  <div class="tbar-div"></div>
+  <div class="fg"><label>Currency</label>
+    <select id="currency">
+      <option value="৳">৳ BDT</option>
+      <option value="$">$ USD</option>
+      <option value="₹">₹ INR</option>
+    </select>
+  </div>
+  <button class="btn btn-o btn-sm" onclick="updateLabel()">↻</button>
+</div>
+
+<!-- Steps nav -->
+<div class="steps">
+  <button class="sbtn active" id="sb0" onclick="go(0)"><span class="n">1</span> বাজার ও খাওয়া</button>
+  <button class="sbtn" id="sb1" onclick="go(1)"><span class="n">2</span> Fixed খরচ</button>
+  <button class="sbtn" id="sb2" onclick="go(2)"><span class="n">3</span> Adjusted</button>
+  <button class="sbtn" id="sb3" onclick="go(3)"><span class="n">4</span> Final</button>
+  <button class="sbtn" id="sb4" onclick="go(4)"><span class="n">5</span> 📊 Report</button>
+</div>
+
+<!-- ════ PANEL 0 ════ Stage 1 Input -->
+<div class="panel active" id="p0">
+  <div class="sh">
+    <div class="st"><span class="stag">STAGE 1</span><h2>বাজার ও খাওয়ার হিসাব</h2></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-o btn-sm" onclick="loadSample()">📥 Sample</button>
+      <button class="btn btn-d btn-sm" onclick="clearAll()">🗑 Clear</button>
+      <button class="btn btn-y btn-sm" onclick="addMember()">+ সদস্য</button>
+    </div>
+  </div>
+  <div class="al ali">💡 প্রতিটি সদস্যের নাম, মোট খাবার সংখ্যা (বেলা), এবং বাজার খরচ লিখুন।</div>
+  <div class="card">
+    <div class="ch"><div class="ct"><span class="ci">👥</span> সদস্যদের তথ্য</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 36px;gap:10px;padding:0 0 10px;border-bottom:2px solid var(--border);margin-bottom:4px;">
+      <span style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'JetBrains Mono',monospace;">সদস্যের নাম</span>
+      <span style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'JetBrains Mono',monospace;">মোট খাবার (বেলা)</span>
+      <span style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'JetBrains Mono',monospace;">বাজার খরচ (৳)</span>
+      <span></span>
+    </div>
+    <div id="memberRows"></div>
+    <button class="addbtn" onclick="addMember()">+ আরেকজন সদস্য যোগ করুন</button>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;">
+    <button class="btn btn-y" onclick="calcS1()">⚡ Stage 1 হিসাব করুন</button>
+    <button class="btn btn-o" onclick="calcAndNext()">Calculate & Next →</button>
+  </div>
+  <div id="s1result" style="display:none;">
+    <div class="srow" id="s1stats"></div>
+    <div class="card">
+      <div class="ch">
+        <div class="ct"><span class="ci">📊</span> Stage 1 — বাজার vs খাওয়া</div>
+        <div id="s1check"></div>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>সদস্য</th><th>বাজার (৳)</th><th>খাবার (বেলা)</th><th>খাবার খরচ (৳)</th><th>ব্যালান্স (৳)</th><th>অবস্থা</th></tr></thead>
+          <tbody id="s1body"></tbody>
+          <tfoot><tr class="tfr" id="s1foot"></tr></tfoot>
+        </table>
+      </div>
+      <p style="font-size:11px;color:var(--text3);margin-top:10px;font-family:'JetBrains Mono',monospace;">* (+) পাবেন | (−) দেবেন | যোগফল = 0 হওয়া বাধ্যতামূলক</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PANEL 1 ════ Stage 2 Fixed Costs -->
+<div class="panel" id="p1">
+  <div class="sh">
+    <div class="st"><span class="stag">STAGE 2</span><h2>Fixed মাসিক খরচ</h2></div>
+    <button class="btn btn-y btn-sm" onclick="calcS2()">⚡ হিসাব করুন</button>
+  </div>
+  <div class="al ali">💡 প্রতিটি সদস্যের fixed খরচ আলাদাভাবে দিতে পারবেন। নতুন category যোগ করতে "+ Category" চাপুন।</div>
+
+  <!-- Category management -->
+  <div class="card" style="margin-bottom:18px;">
+    <div class="ch">
+      <div class="ct"><span class="ci">⚙️</span> খরচের ধরন (Categories)</div>
+      <button class="btn btn-b btn-sm" onclick="addCategory()">+ Category যোগ</button>
+    </div>
+    <div id="catList"></div>
+    <div style="margin-top:14px;" class="al alw">⚠️ Category নাম পরিবর্তন করলে <strong>Refresh করুন</strong> বাটন চাপুন যাতে নিচের টেবিল আপডেট হয়।
+      <button class="btn btn-o btn-sm" style="margin-left:8px;" onclick="renderFixedTable()">↻ Refresh</button>
+    </div>
+  </div>
+
+  <!-- Global apply -->
+  <div class="card" style="margin-bottom:18px;">
+    <div class="ch"><div class="ct"><span class="ci">⚡</span> সবার জন্য একসাথে সেট করুন</div></div>
+    <div id="globalInputs" class="fgrid"></div>
+    <div style="margin-top:12px;">
+      <button class="btn btn-o btn-sm" onclick="applyGlobal()">↻ সবার উপর প্রয়োগ করুন</button>
+    </div>
+  </div>
+
+  <!-- Per member table -->
+  <div class="card">
+    <div class="ch"><div class="ct"><span class="ci">🧾</span> সদস্যভিত্তিক Fixed খরচ</div></div>
+    <div id="fixedTableWrap"></div>
+  </div>
+
+  <div id="s2result" style="display:none;">
+    <div class="card">
+      <div class="ch"><div class="ct"><span class="ci">🧾</span> Stage 2 — Fixed খরচ সারাংশ</div></div>
+      <div class="tw"><table>
+        <thead><tr id="s2head"></tr></thead>
+        <tbody id="s2body"></tbody>
+        <tfoot><tr class="tfr" id="s2foot"></tr></tfoot>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PANEL 2 ════ Stage 3 Adjusted -->
+<div class="panel" id="p2">
+  <div class="sh">
+    <div class="st"><span class="stag">STAGE 3</span><h2>Adjusted হিসাব</h2></div>
+    <button class="btn btn-y btn-sm" onclick="calcS3()">⚡ হিসাব করুন</button>
+  </div>
+  <div class="al alw">⚠️ Stage 1 balance + Stage 2 fixed cost মিলিয়ে adjusted হিসাব — পাবেন হলে fixed বাদ, দেবেন হলে fixed যোগ।</div>
+  <div id="s3result">
+    <div class="empty" id="s3empty"><div class="ei">⚡</div><p>Stage 1 ও Stage 2 সম্পন্ন করুন।</p></div>
+    <div id="s3content" style="display:none;">
+      <div class="card">
+        <div class="ch"><div class="ct"><span class="ci">🔄</span> Stage 3 — Adjusted হিসাব</div></div>
+        <div class="tw"><table>
+          <thead><tr><th>সদস্য</th><th>Stage 1 Balance</th><th>Fixed খরচ</th><th>পদ্ধতি</th><th>Adjusted পরিমাণ</th></tr></thead>
+          <tbody id="s3body"></tbody>
+          <tfoot><tr class="tfr" id="s3foot"></tr></tfoot>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PANEL 3 ════ Stage 4 Final -->
+<div class="panel" id="p3">
+  <div class="sh">
+    <div class="st"><span class="stag">STAGE 4</span><h2>চূড়ান্ত হিসাব</h2></div>
+    <button class="btn btn-y btn-sm" onclick="calcS4()">⚡ Final হিসাব</button>
+  </div>
+  <div class="al als">✅ এটাই চূড়ান্ত — কে কত টাকা দেবে বা পাবে।</div>
+  <div id="s4result">
+    <div class="empty" id="s4empty"><div class="ei">📋</div><p>আগের ধাপগুলো সম্পন্ন করুন।</p></div>
+    <div id="s4content" style="display:none;">
+      <div class="srow" id="s4stats"></div>
+      <div class="card">
+        <div class="ch">
+          <div class="ct"><span class="ci">💰</span> Final Payment Table</div>
+          <div id="s4check"></div>
+        </div>
+        <div class="tw"><table>
+          <thead><tr><th>সদস্য</th><th>Adjusted পরিমাণ</th><th>অবস্থা</th><th>পরিমাণ</th></tr></thead>
+          <tbody id="s4body"></tbody>
+          <tfoot><tr class="tfr" id="s4foot"></tr></tfoot>
+        </table></div>
+      </div>
+      <div class="card" id="flowCard">
+        <div class="ch"><div class="ct"><span class="ci">💸</span> টাকার হিসাব প্রবাহ</div></div>
+        <div id="flowContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PANEL 4 ════ Full Report -->
+<div class="panel" id="p4">
+  <div class="pt" id="rptTitle"></div>
+  <div class="sh">
+    <div class="st"><span class="stag">STAGE 5</span><h2>সম্পূর্ণ রিপোর্ট</h2></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-g" onclick="genReport()">📊 রিপোর্ট তৈরি</button>
+      <button class="btn btn-o" onclick="window.print()">🖨️ Print</button>
+      <button class="btn btn-y" onclick="downloadReport()">⬇️ Download</button>
+    </div>
+  </div>
+  <div id="fullReport">
+    <div class="empty"><div class="ei">📄</div><p>সব ধাপ সম্পন্ন করে "রিপোর্ট তৈরি" চাপুন।</p></div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<!-- Floating bar -->
+<div class="fab">
+  <button class="btn btn-o btn-sm" onclick="go(Math.max(0,cur-1))">← পূর্ববর্তী</button>
+  <button class="btn btn-y btn-sm" onclick="calcAndNext()">⚡ Calculate & Next →</button>
+  <button class="btn btn-o btn-sm" onclick="window.print()">🖨️ Print</button>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let members = [];  // [{id, nameEl, mealsEl, bazarEl}] — live DOM references
+let midx = 0;
+let categories = []; // [{id, name, globalVal}]
+let cidx = 0;
+
+let S1 = [], S2 = [], S3 = [], S4 = [];
+let cur = 0;
+
+const C = () => document.getElementById('currency')?.value || '৳';
+const fmt = n => C() + ' ' + Math.abs(n).toLocaleString('en-IN', {minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtN = n => (n < 0 ? '-' : '+') + fmt(n);
+
+function updateLabel() {
+  const m = document.getElementById('messMonth').value;
+  document.getElementById('curMonLabel').textContent = m || '—';
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function go(i) {
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('active',j===i));
+  document.querySelectorAll('.sbtn').forEach((b,j)=>{b.classList.remove('active');if(j===i)b.classList.add('active');});
+  cur = i;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function calcAndNext() {
+  if(cur===0){calcS1();renderFixedTable();go(1);}
+  else if(cur===1){calcS2();calcS3();go(2);}
+  else if(cur===2){calcS3();calcS4();go(3);}
+  else if(cur===3){calcS4();go(4);genReport();}
+  else if(cur===4){genReport();}
+}
+
+// ══════════════════════════════════════
+// MEMBERS
+// ══════════════════════════════════════
+function addMember(name='', meals='', bazar='') {
+  midx++;
+  const id = midx;
+  members.push({id});
+  const cont = document.getElementById('memberRows');
+  const row = document.createElement('div');
+  row.className = 'mrow';
+  row.id = `mr_${id}`;
+  row.innerHTML = `
+    <input type="text" id="mn_${id}" value="${name}" placeholder="নাম লিখুন" style="font-weight:600;font-family:'Syne',sans-serif;">
+    <input type="number" id="mm_${id}" value="${meals}" placeholder="যেমন: 45" min="0" step="0.5">
+    <input type="number" id="mb_${id}" value="${bazar}" placeholder="যেমন: 2500" min="0">
+    <button class="delbtn" onclick="delMember(${id})" title="Delete">×</button>
+  `;
+  cont.appendChild(row);
+}
+
+function delMember(id) {
+  members = members.filter(m=>m.id!==id);
+  document.getElementById(`mr_${id}`)?.remove();
+}
+
+function clearAll() {
+  members = []; midx = 0;
+  document.getElementById('memberRows').innerHTML = '';
+  document.getElementById('s1result').style.display = 'none';
+  S1 = [];
+}
+
+// ══════════════════════════════════════
+// CATEGORIES
+// ══════════════════════════════════════
+function addCategory(name='', globalVal=0) {
+  cidx++;
+  const id = cidx;
+  categories.push({id, name, globalVal});
+  renderCatList();
+  renderGlobalInputs();
+  renderFixedTable();
+}
+
+function delCategory(id) {
+  categories = categories.filter(c=>c.id!==id);
+  renderCatList();
+  renderGlobalInputs();
+  renderFixedTable();
+}
+
+function renderCatList() {
+  const el = document.getElementById('catList');
+  if(categories.length === 0) {
+    el.innerHTML = '<p style="color:var(--text3);font-size:13px;padding:8px 0;">কোনো category নেই। উপরে "+ Category" চাপুন।</p>';
+    return;
+  }
+  el.innerHTML = categories.map(c=>`
+    <div class="catrow">
+      <input class="catname" type="text" id="catn_${c.id}" value="${c.name}" placeholder="Category নাম (যেমন: ভাড়া)" oninput="syncCatName(${c.id})">
+      <button class="delbtn" onclick="delCategory(${c.id})" title="Delete category">×</button>
+    </div>
+  `).join('');
+}
+
+function syncCatName(id) {
+  const cat = categories.find(c=>c.id===id);
+  if(cat) cat.name = document.getElementById(`catn_${id}`)?.value || '';
+}
+
+function renderGlobalInputs() {
+  const el = document.getElementById('globalInputs');
+  el.innerHTML = categories.map(c=>`
+    <div class="fg">
+      <label>${c.name || 'Category '+c.id} (${C()})</label>
+      <input type="number" id="gv_${c.id}" value="${c.globalVal||0}" placeholder="0" min="0">
+    </div>
+  `).join('');
+}
+
+function applyGlobal() {
+  categories.forEach(c=>{
+    c.globalVal = parseFloat(document.getElementById(`gv_${c.id}`)?.value)||0;
+  });
+  // apply to all members
+  S1.forEach(m=>{
+    categories.forEach(c=>{
+      const el = document.getElementById(`fv_${m.id}_${c.id}`);
+      if(el) { el.value = c.globalVal; updateMemberTotal(m.id); }
+    });
+  });
+  if(S1.length===0){
+    // try from live members
+    members.forEach(mem=>{
+      categories.forEach(c=>{
+        const el = document.getElementById(`fv_${mem.id}_${c.id}`);
+        if(el) el.value = c.globalVal;
+      });
+    });
+  }
+}
+
+function renderFixedTable() {
+  const wrap = document.getElementById('fixedTableWrap');
+  const dataSource = S1.length > 0 ? S1 : members.map(m=>({
+    id: m.id,
+    name: document.getElementById(`mn_${m.id}`)?.value || `Member ${m.id}`
+  }));
+
+  if(dataSource.length === 0) {
+    wrap.innerHTML = '<p style="color:var(--text3);font-size:13px;padding:8px 0;">আগে Stage 1 সম্পন্ন করুন বা সদস্য যোগ করুন।</p>';
+    return;
+  }
+  if(categories.length === 0) {
+    wrap.innerHTML = '<p style="color:var(--text3);font-size:13px;padding:8px 0;">আগে Category যোগ করুন।</p>';
+    return;
+  }
+
+  const headerCols = `<div style="display:grid;grid-template-columns:140px ${categories.map(()=>'1fr').join(' ')} 90px;gap:8px;padding:0 0 10px;border-bottom:2px solid var(--border);margin-bottom:4px;">
+    <span style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'JetBrains Mono',monospace;">নাম</span>
+    ${categories.map(c=>`<span style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'JetBrains Mono',monospace;">${c.name||'Cat '+c.id}</span>`).join('')}
+    <span style="font-size:10px;color:var(--text3);text-transform:uppercase;font-family:'JetBrains Mono',monospace;">মোট</span>
+  </div>`;
+
+  const rows = dataSource.map(m=>{
+    const catInputs = categories.map(c=>`
+      <input type="number" id="fv_${m.id}_${c.id}" value="${c.globalVal||0}" min="0" onchange="updateMemberTotal(${m.id})" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;width:100%;">
+    `).join('');
+    const tot = categories.reduce((s,c)=>{const v=parseFloat(document.getElementById(`fv_${m.id}_${c.id}`)?.value)||c.globalVal||0;return s+v;},0);
+    return `<div style="display:grid;grid-template-columns:140px ${categories.map(()=>'1fr').join(' ')} 90px;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);">
+      <span style="font-weight:600;font-family:'Syne',sans-serif;font-size:13px;">${m.name}</span>
+      ${catInputs}
+      <span id="ft_${m.id}" style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent);font-size:13px;">${C()} ${tot.toLocaleString()}</span>
+    </div>`;
+  }).join('');
+
+  wrap.innerHTML = headerCols + rows;
+}
+
+function updateMemberTotal(mid) {
+  const tot = categories.reduce((s,c)=>{
+    return s + (parseFloat(document.getElementById(`fv_${mid}_${c.id}`)?.value)||0);
+  },0);
+  const el = document.getElementById(`ft_${mid}`);
+  if(el) el.textContent = C()+' '+tot.toLocaleString();
+}
+
+// ══════════════════════════════════════
+// STAGE 1
+// ══════════════════════════════════════
+function calcS1() {
+  if(members.length===0){alert('অন্তত একজন সদস্য যোগ করুন!');return;}
+
+  S1 = members.map(m=>{
+    const name  = document.getElementById(`mn_${m.id}`)?.value.trim() || 'Unknown';
+    const meals = parseFloat(document.getElementById(`mm_${m.id}`)?.value)||0;
+    const bazar = parseFloat(document.getElementById(`mb_${m.id}`)?.value)||0;
+    return {id:m.id, name, meals, bazar};
+  }).filter(d=>d.name);
+
+  const TB = S1.reduce((s,d)=>s+d.bazar,0);
+  const TM = S1.reduce((s,d)=>s+d.meals,0);
+  const rate = TM>0 ? TB/TM : 0;
+
+  S1.forEach(d=>{
+    d.mealCost = d.meals * rate;
+    d.balance  = d.bazar - d.mealCost;
+  });
+
+  const TB2 = S1.reduce((s,d)=>s+d.balance,0);
+
+  document.getElementById('s1stats').innerHTML = `
+    <div class="sc y"><div class="sl">মোট বাজার</div><div class="sv y">${fmt(TB)}</div></div>
+    <div class="sc b"><div class="sl">মোট খাবার</div><div class="sv b">${TM.toFixed(2)} বেলা</div></div>
+    <div class="sc g"><div class="sl">প্রতি বেলা রেট</div><div class="sv g">${fmt(rate)}</div></div>
+    <div class="sc ${Math.abs(TB2)<0.01?'g':'r'}"><div class="sl">Balance যোগফল</div><div class="sv ${Math.abs(TB2)<0.01?'g':'r'}">${fmt(TB2)}</div></div>
+  `;
+
+  document.getElementById('s1body').innerHTML = S1.map(d=>`
+    <tr>
+      <td class="cn">${d.name}</td>
+      <td>${fmt(d.bazar)}</td>
+      <td>${d.meals.toFixed(2)}</td>
+      <td>${fmt(d.mealCost)}</td>
+      <td class="${d.balance>=0?'pos':'neg'}">${fmtN(d.balance)}</td>
+      <td><span class="badge ${d.balance>=0?'bg':'br'}">${d.balance>=0?'✔ পাবেন':'✖ দেবেন'}</span></td>
+    </tr>
+  `).join('');
+
+  document.getElementById('s1foot').innerHTML = `
+    <td>মোট</td>
+    <td>${fmt(TB)}</td>
+    <td>${TM.toFixed(2)}</td>
+    <td>${fmt(S1.reduce((s,d)=>s+d.mealCost,0))}</td>
+    <td class="${Math.abs(TB2)<0.01?'pos':'neg'}">${fmt(TB2)}</td>
+    <td><span class="badge ${Math.abs(TB2)<0.01?'bg':'br'}">${Math.abs(TB2)<0.01?'✅ শূন্য':'⚠ শূন্য নয়'}</span></td>
+  `;
+
+  document.getElementById('s1check').innerHTML = `<span class="badge ${Math.abs(TB2)<0.01?'bg':'br'}">${Math.abs(TB2)<0.01?'✅ Balance = 0':'⚠ Balance ≠ 0'}</span>`;
+  document.getElementById('s1result').style.display='block';
+  document.getElementById('sb0').classList.add('done');
+}
+
+// ══════════════════════════════════════
+// STAGE 2
+// ══════════════════════════════════════
+function calcS2() {
+  if(S1.length===0){alert('আগে Stage 1 সম্পন্ন করুন!');return;}
+  if(categories.length===0){alert('অন্তত একটি category যোগ করুন!');return;}
+
+  S2 = S1.map(d=>{
+    const cats = {};
+    categories.forEach(c=>{
+      cats[c.id] = parseFloat(document.getElementById(`fv_${d.id}_${c.id}`)?.value)||0;
+    });
+    const total = Object.values(cats).reduce((s,v)=>s+v,0);
+    return {id:d.id, name:d.name, cats, total};
+  });
+
+  // Build table header
+  document.getElementById('s2head').innerHTML = `<th>সদস্য</th>${categories.map(c=>`<th>${c.name||'Cat '+c.id}</th>`).join('')}<th>মোট Fixed</th>`;
+
+  document.getElementById('s2body').innerHTML = S2.map(d=>`
+    <tr>
+      <td class="cn">${d.name}</td>
+      ${categories.map(c=>`<td>${fmt(d.cats[c.id]||0)}</td>`).join('')}
+      <td style="color:var(--accent);font-weight:700;">${fmt(d.total)}</td>
+    </tr>
+  `).join('');
+
+  const totCats = {};
+  categories.forEach(c=>{totCats[c.id]=S2.reduce((s,d)=>s+(d.cats[c.id]||0),0);});
+  const totAll = S2.reduce((s,d)=>s+d.total,0);
+  document.getElementById('s2foot').innerHTML = `<td>মোট</td>${categories.map(c=>`<td>${fmt(totCats[c.id])}</td>`).join('')}<td>${fmt(totAll)}</td>`;
+
+  document.getElementById('s2result').style.display='block';
+  document.getElementById('sb1').classList.add('done');
+}
+
+// ══════════════════════════════════════
+// STAGE 3
+// ══════════════════════════════════════
+function calcS3() {
+  if(S1.length===0||S2.length===0){alert('Stage 1 ও 2 আগে সম্পন্ন করুন!');return;}
+
+  S3 = S1.map(d=>{
+    const s2 = S2.find(x=>x.id===d.id)||{total:0};
+    const fixed = s2.total;
+    const bal = d.balance;
+    // LOGIC per image:
+    // Stage 1 balance (পাবেন = positive, দেবেন = negative)
+    // Adjusted = balance - fixed   (always subtract fixed)
+    //   if bal was +ve: adjusted = bal - fixed → might be +ve or -ve
+    //   if bal was -ve: adjusted = bal - fixed → more negative (owes more)
+    const adjusted = bal - fixed;
+    const method = bal >= 0
+      ? `(+${fmt(bal)}) পাবেন − fixed (${fmt(fixed)})`
+      : `(${fmtN(bal)}) দেবেন − fixed (${fmt(fixed)})`;
+    return {id:d.id, name:d.name, balance:bal, fixed, adjusted, method};
+  });
+
+  document.getElementById('s3empty').style.display='none';
+  document.getElementById('s3content').style.display='block';
+
+  document.getElementById('s3body').innerHTML = S3.map(d=>`
+    <tr>
+      <td class="cn">${d.name}</td>
+      <td class="${d.balance>=0?'pos':'neg'}">${fmtN(d.balance)}</td>
+      <td style="color:var(--accent);">${fmt(d.fixed)}</td>
+      <td style="font-size:11px;color:var(--text2);">${d.method}</td>
+      <td class="${d.adjusted>=0?'pos':'neg'}" style="font-size:14px;font-weight:800;">${fmtN(d.adjusted)}</td>
+    </tr>
+  `).join('');
+
+  const totAdj = S3.reduce((s,d)=>s+d.adjusted,0);
+  document.getElementById('s3foot').innerHTML = `
+    <td>মোট</td>
+    <td>${fmt(S3.reduce((s,d)=>s+d.balance,0))}</td>
+    <td>${fmt(S3.reduce((s,d)=>s+d.fixed,0))}</td>
+    <td>—</td>
+    <td>${fmtN(totAdj)}</td>
+  `;
+  document.getElementById('sb2').classList.add('done');
+}
+
+// ══════════════════════════════════════
+// STAGE 4
+// ══════════════════════════════════════
+function calcS4() {
+  if(S3.length===0){calcS3();if(S3.length===0)return;}
+
+  S4 = S3.map(d=>({
+    id: d.id,
+    name: d.name,
+    adjusted: d.adjusted,
+    // If adjusted < 0 → owes money → দেবেন
+    // If adjusted >= 0 → receives money → পাবেন
+    status: d.adjusted < 0 ? 'pay' : 'receive',
+    finalAmount: Math.abs(d.adjusted)
+  }));
+
+  const totalPay = S4.filter(d=>d.status==='pay').reduce((s,d)=>s+d.finalAmount,0);
+  const totalRec = S4.filter(d=>d.status==='receive').reduce((s,d)=>s+d.finalAmount,0);
+  const diff = Math.abs(totalPay - totalRec);
+
+  document.getElementById('s4stats').innerHTML = `
+    <div class="sc r"><div class="sl">মোট দেবেন</div><div class="sv r">${fmt(totalPay)}</div></div>
+    <div class="sc g"><div class="sl">মোট পাবেন</div><div class="sv g">${fmt(totalRec)}</div></div>
+    <div class="sc ${diff<0.01?'g':'r'}"><div class="sl">পার্থক্য</div><div class="sv ${diff<0.01?'g':'r'}">${fmt(diff)}</div></div>
+    <div class="sc b"><div class="sl">মোট সদস্য</div><div class="sv b">${S4.length} জন</div></div>
+  `;
+
+  document.getElementById('s4body').innerHTML = S4.map(d=>`
+    <tr ${d.status==='receive'?'style="background:rgba(61,214,140,.04);"':''}>
+      <td class="cn">${d.name}</td>
+      <td class="${d.adjusted>=0?'pos':'neg'}">${fmtN(d.adjusted)}</td>
+      <td><span class="badge ${d.status==='pay'?'br':'bg'}">${d.status==='pay'?'💸 দেবেন':'💰 পাবেন'}</span></td>
+      <td style="font-size:16px;font-weight:800;color:${d.status==='pay'?'var(--red)':'var(--green)'};">${fmt(d.finalAmount)}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('s4foot').innerHTML = `
+    <td>মোট দেবেন</td>
+    <td>—</td>
+    <td><span class="badge ${diff<0.01?'bg':'br'}">${diff<0.01?'✅ সুষম':'⚠ অসুষম'}</span></td>
+    <td style="color:var(--accent);">${fmt(totalPay)}</td>
+  `;
+
+  // Payment flow
+  const payers   = S4.filter(d=>d.status==='pay').sort((a,b)=>b.finalAmount-a.finalAmount);
+  const recvs    = S4.filter(d=>d.status==='receive').sort((a,b)=>b.finalAmount-a.finalAmount);
+  const flows = [];
+  const pBal = payers.map(p=>({...p, rem:p.finalAmount}));
+  const rBal = recvs.map(r=>({...r, rem:r.finalAmount}));
+  let pi=0,ri=0;
+  while(pi<pBal.length && ri<rBal.length){
+    const amt = Math.min(pBal[pi].rem, rBal[ri].rem);
+    flows.push({from:pBal[pi].name, to:rBal[ri].name, amt});
+    pBal[pi].rem -= amt; rBal[ri].rem -= amt;
+    if(pBal[pi].rem < 0.01) pi++;
+    if(rBal[ri].rem < 0.01) ri++;
+  }
+  document.getElementById('flowContent').innerHTML = flows.length
+    ? flows.map(f=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+        <span style="font-weight:700;color:var(--red);min-width:100px;">${f.from}</span>
+        <span style="color:var(--text3);">→ দেবেন →</span>
+        <span style="font-weight:700;color:var(--green);min-width:100px;">${f.to}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--accent);margin-left:auto;">${fmt(f.amt)}</span>
+      </div>`).join('')
+    : '<p style="color:var(--text3);padding:10px 0;">সব সুষম — কাউকে টাকা দেওয়া লাগবে না।</p>';
+
+  document.getElementById('s4check').innerHTML = `<span class="badge ${diff<0.01?'bg':'br'}">${diff<0.01?'✅ সুষম হিসাব':'⚠ পার্থক্য আছে'}</span>`;
+  document.getElementById('s4empty').style.display='none';
+  document.getElementById('s4content').style.display='block';
+  document.getElementById('sb3').classList.add('done');
+}
+
+// ══════════════════════════════════════
+// FULL REPORT (STAGE 5)
+// ══════════════════════════════════════
+function genReport() {
+  if(S1.length===0){alert('আগে সব ধাপ সম্পন্ন করুন!');return;}
+  if(S2.length===0) calcS2();
+  if(S3.length===0) calcS3();
+  if(S4.length===0) calcS4();
+
+  const month = document.getElementById('messMonth').value;
+  const mname = document.getElementById('messName').value;
+  const TB = S1.reduce((s,d)=>s+d.bazar,0);
+  const TM = S1.reduce((s,d)=>s+d.meals,0);
+  const rate = TM>0?TB/TM:0;
+  const totalPay = S4.filter(d=>d.status==='pay').reduce((s,d)=>s+d.finalAmount,0);
+
+  document.getElementById('rptTitle').innerHTML = `<h1 style="font-size:24px;margin-bottom:4px;">${mname} — মাসিক হিসাব</h1><p style="font-size:14px;color:#666;">${month} | তৈরি: ${new Date().toLocaleDateString('bn-BD')}</p><hr style="margin:12px 0;">`;
+
+  document.getElementById('fullReport').innerHTML = `
+  <!-- Summary stats -->
+  <div class="srow">
+    <div class="sc y"><div class="sl">মোট বাজার</div><div class="sv y">${fmt(TB)}</div></div>
+    <div class="sc b"><div class="sl">মোট খাবার</div><div class="sv b">${TM.toFixed(2)} বেলা</div></div>
+    <div class="sc g"><div class="sl">প্রতি বেলা রেট</div><div class="sv g">${fmt(rate)}</div></div>
+    <div class="sc r"><div class="sl">মোট দেবেন</div><div class="sv r">${fmt(totalPay)}</div></div>
+  </div>
+
+  <!-- Stage 1 -->
+  <div class="card" style="page-break-inside:avoid;">
+    <div class="ch"><div class="ct"><span class="ci">📊</span> Stage 1 — বাজার vs খাওয়া</div><span style="font-size:12px;color:var(--text3);">রেট: ${fmt(rate)}/বেলা</span></div>
+    <div class="tw"><table>
+      <thead><tr><th>সদস্য</th><th>বাজার</th><th>খাবার (বেলা)</th><th>খাবার খরচ</th><th>ব্যালান্স</th><th>অবস্থা</th></tr></thead>
+      <tbody>${S1.map(d=>`<tr><td class="cn">${d.name}</td><td>${fmt(d.bazar)}</td><td>${d.meals.toFixed(2)}</td><td>${fmt(d.mealCost)}</td><td class="${d.balance>=0?'pos':'neg'}">${fmtN(d.balance)}</td><td><span class="badge ${d.balance>=0?'bg':'br'}">${d.balance>=0?'পাবেন':'দেবেন'}</span></td></tr>`).join('')}</tbody>
+      <tfoot><tr class="tfr"><td>মোট</td><td>${fmt(TB)}</td><td>${TM.toFixed(2)}</td><td>${fmt(S1.reduce((s,d)=>s+d.mealCost,0))}</td><td>${fmt(0)}</td><td><span class="badge bg">✅ শূন্য</span></td></tr></tfoot>
+    </table></div>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="card" style="page-break-inside:avoid;">
+    <div class="ch"><div class="ct"><span class="ci">🧾</span> Stage 2 — Fixed খরচ</div></div>
+    <div class="tw"><table>
+      <thead><tr><th>সদস্য</th>${categories.map(c=>`<th>${c.name||'Cat '+c.id}</th>`).join('')}<th>মোট Fixed</th></tr></thead>
+      <tbody>${S2.map(d=>`<tr><td class="cn">${d.name}</td>${categories.map(c=>`<td>${fmt(d.cats[c.id]||0)}</td>`).join('')}<td style="color:var(--accent);font-weight:700;">${fmt(d.total)}</td></tr>`).join('')}</tbody>
+      <tfoot><tr class="tfr"><td>মোট</td>${categories.map(c=>`<td>${fmt(S2.reduce((s,d)=>s+(d.cats[c.id]||0),0))}</td>`).join('')}<td>${fmt(S2.reduce((s,d)=>s+d.total,0))}</td></tr></tfoot>
+    </table></div>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="card" style="page-break-inside:avoid;">
+    <div class="ch"><div class="ct"><span class="ci">🔄</span> Stage 3 — Adjusted হিসাব</div></div>
+    <div class="tw"><table>
+      <thead><tr><th>সদস্য</th><th>Stage 1 Balance</th><th>Fixed খরচ</th><th>পদ্ধতি</th><th>Adjusted</th></tr></thead>
+      <tbody>${S3.map(d=>`<tr><td class="cn">${d.name}</td><td class="${d.balance>=0?'pos':'neg'}">${fmtN(d.balance)}</td><td style="color:var(--accent);">${fmt(d.fixed)}</td><td style="font-size:11px;">${d.method}</td><td class="${d.adjusted>=0?'pos':'neg'}" style="font-weight:800;">${fmtN(d.adjusted)}</td></tr>`).join('')}</tbody>
+      <tfoot><tr class="tfr"><td>মোট</td><td>${fmt(S3.reduce((s,d)=>s+d.balance,0))}</td><td>${fmt(S3.reduce((s,d)=>s+d.fixed,0))}</td><td>—</td><td>${fmtN(S3.reduce((s,d)=>s+d.adjusted,0))}</td></tr></tfoot>
+    </table></div>
+  </div>
+
+  <!-- Stage 4 -->
+  <div class="card" style="page-break-inside:avoid;">
+    <div class="ch"><div class="ct"><span class="ci">💰</span> Stage 4 — চূড়ান্ত Payment</div></div>
+    <div class="tw"><table>
+      <thead><tr><th>সদস্য</th><th>Adjusted পরিমাণ</th><th>অবস্থা</th><th>পরিমাণ (${C()})</th></tr></thead>
+      <tbody>${S4.map(d=>`<tr ${d.status==='receive'?'style="background:rgba(61,214,140,.04);"':''}><td class="cn">${d.name}</td><td class="${d.adjusted>=0?'pos':'neg'}">${fmtN(d.adjusted)}</td><td><span class="badge ${d.status==='pay'?'br':'bg'}">${d.status==='pay'?'💸 দেবেন':'💰 পাবেন'}</span></td><td style="font-size:15px;font-weight:800;color:${d.status==='pay'?'var(--red)':'var(--green)'};">${fmt(d.finalAmount)}</td></tr>`).join('')}</tbody>
+      <tfoot><tr class="tfr"><td>মোট দেবেন</td><td>—</td><td><span class="badge bg">✅ সুষম</span></td><td style="color:var(--accent);">${fmt(totalPay)}</td></tr></tfoot>
+    </table></div>
+  </div>
+
+  <div style="margin-top:16px;padding:14px;background:var(--bg3);border-radius:9px;border:1px solid var(--border);">
+    <p style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;">📌 Mess Manager Pro | ${mname} | ${month} | তৈরি: ${new Date().toLocaleString('bn-BD')}</p>
+  </div>
+  `;
+  document.getElementById('sb4').classList.add('done');
+}
+
+// ══════════════════════════════════════
+// DOWNLOAD
+// ══════════════════════════════════════
+function downloadReport() {
+  genReport();
+  const month = document.getElementById('messMonth').value;
+  const mname = document.getElementById('messName').value;
+  const TB = S1.reduce((s,d)=>s+d.bazar,0);
+  const TM = S1.reduce((s,d)=>s+d.meals,0);
+  const rate = TM>0?TB/TM:0;
+  const totalPay = S4.filter(d=>d.status==='pay').reduce((s,d)=>s+d.finalAmount,0);
+  const f = n => C()+' '+Math.abs(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const fn = n => (n<0?'-':'+')+f(n);
+
+  const html = `<!DOCTYPE html>
+<html lang="bn"><head><meta charset="UTF-8">
+<title>Mess Report — ${mname} — ${month}</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hind Siliguri',sans-serif;background:#fff;color:#111;padding:24px 28px;}
+h1{font-size:22px;margin-bottom:4px;}
+.sub{color:#555;font-size:14px;margin-bottom:20px;}
+hr{border:none;border-top:2px solid #ddd;margin:16px 0;}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.stat{flex:1;min-width:130px;border:1px solid #ddd;border-radius:8px;padding:12px;background:#fafafa;}
+.sl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;font-family:'JetBrains Mono',monospace;}
+.sv{font-size:19px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.card{border:1px solid #ddd;border-radius:10px;padding:16px;margin-bottom:18px;page-break-inside:avoid;}
+.ctitle{font-size:15px;font-weight:700;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #eee;}
+table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12px;}
+th{background:#f0f0f0;padding:8px 10px;text-align:left;border-bottom:2px solid #ccc;font-size:10px;text-transform:uppercase;letter-spacing:.8px;}
+td{padding:8px 10px;border-bottom:1px solid #eee;vertical-align:middle;}
+.tfr td{background:#f0f0f0;font-weight:700;border-top:2px solid #ccc;}
+.pos{color:#007700;font-weight:700;}
+.neg{color:#cc0000;font-weight:700;}
+.green-row{background:#f0fff4;}
+.badge{padding:3px 9px;border-radius:50px;font-size:11px;font-weight:600;border:1px solid #ccc;}
+.bg{background:#e6fff0;color:#006600;border-color:#88dd99;}
+.br{background:#fff0f0;color:#cc0000;border-color:#dd8888;}
+.footer{font-size:11px;color:#999;text-align:center;margin-top:20px;font-family:'JetBrains Mono',monospace;}
+</style></head><body>
+<h1>${mname} — মাসিক হিসাব</h1>
+<div class="sub">${month} | তৈরি: ${new Date().toLocaleDateString()}</div>
+<hr>
+<div class="stats">
+  <div class="stat"><div class="sl">মোট বাজার</div><div class="sv">${f(TB)}</div></div>
+  <div class="stat"><div class="sl">মোট খাবার</div><div class="sv">${TM.toFixed(2)} বেলা</div></div>
+  <div class="stat"><div class="sl">প্রতি বেলা রেট</div><div class="sv">${f(rate)}</div></div>
+  <div class="stat"><div class="sl">মোট দেবেন</div><div class="sv" style="color:#cc0000;">${f(totalPay)}</div></div>
+</div>
+
+<div class="card">
+  <div class="ctitle">Stage 1 — বাজার vs খাওয়া | রেট: ${f(rate)}/বেলা</div>
+  <table><thead><tr><th>সদস্য</th><th>বাজার</th><th>খাবার (বেলা)</th><th>খাবার খরচ</th><th>ব্যালান্স</th><th>অবস্থা</th></tr></thead>
+  <tbody>${S1.map(d=>`<tr><td><strong>${d.name}</strong></td><td>${f(d.bazar)}</td><td>${d.meals.toFixed(2)}</td><td>${f(d.mealCost)}</td><td class="${d.balance>=0?'pos':'neg'}">${fn(d.balance)}</td><td><span class="badge ${d.balance>=0?'bg':'br'}">${d.balance>=0?'পাবেন':'দেবেন'}</span></td></tr>`).join('')}</tbody>
+  <tfoot><tr class="tfr"><td>মোট</td><td>${f(TB)}</td><td>${TM.toFixed(2)}</td><td>${f(S1.reduce((s,d)=>s+d.mealCost,0))}</td><td>${f(0)}</td><td><span class="badge bg">✅ শূন্য</span></td></tr></tfoot>
+  </table>
+</div>
+
+<div class="card">
+  <div class="ctitle">Stage 2 — Fixed খরচ</div>
+  <table><thead><tr><th>সদস্য</th>${categories.map(c=>`<th>${c.name||'Cat '+c.id}</th>`).join('')}<th>মোট Fixed</th></tr></thead>
+  <tbody>${S2.map(d=>`<tr><td><strong>${d.name}</strong></td>${categories.map(c=>`<td>${f(d.cats[c.id]||0)}</td>`).join('')}<td><strong>${f(d.total)}</strong></td></tr>`).join('')}</tbody>
+  </table>
+</div>
+
+<div class="card">
+  <div class="ctitle">Stage 3 — Adjusted হিসাব</div>
+  <table><thead><tr><th>সদস্য</th><th>Stage 1 Balance</th><th>Fixed খরচ</th><th>Adjusted পরিমাণ</th></tr></thead>
+  <tbody>${S3.map(d=>`<tr><td><strong>${d.name}</strong></td><td class="${d.balance>=0?'pos':'neg'}">${fn(d.balance)}</td><td>${f(d.fixed)}</td><td class="${d.adjusted>=0?'pos':'neg'}"><strong>${fn(d.adjusted)}</strong></td></tr>`).join('')}</tbody>
+  </table>
+</div>
+
+<div class="card">
+  <div class="ctitle">Stage 4 — চূড়ান্ত Payment Table</div>
+  <table><thead><tr><th>সদস্য</th><th>Adjusted পরিমাণ</th><th>অবস্থা</th><th>পরিমাণ</th></tr></thead>
+  <tbody>${S4.map(d=>`<tr ${d.status==='receive'?'class="green-row"':''}><td><strong>${d.name}</strong></td><td class="${d.adjusted>=0?'pos':'neg'}">${fn(d.adjusted)}</td><td><span class="badge ${d.status==='pay'?'br':'bg'}">${d.status==='pay'?'💸 দেবেন':'💰 পাবেন'}</span></td><td style="font-size:14px;" class="${d.status==='pay'?'neg':'pos'}"><strong>${f(d.finalAmount)}</strong></td></tr>`).join('')}</tbody>
+  <tfoot><tr class="tfr"><td>মোট দেবেন</td><td>—</td><td><span class="badge bg">✅ সুষম</span></td><td style="font-size:14px;"><strong>${f(totalPay)}</strong></td></tr></tfoot>
+  </table>
+</div>
+
+<div class="footer">Mess Manager Pro | ${mname} | ${month} | Generated: ${new Date().toLocaleString()}</div>
+</body></html>`;
+
+  const blob = new Blob([html],{type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `MessReport_${mname.replace(/\s/g,'_')}_${month.replace(/\s/g,'_')}.html`;
+  a.click();
+}
+
+// ══════════════════════════════════════
+// SAMPLE DATA (April 2026 — from image)
+// ══════════════════════════════════════
+function loadSample() {
+  clearAll();
+  [
+    {name:'আবুর রহমান', meals:62.01, bazar:6615},
+    {name:'জুনায়েদ',   meals:55.83, bazar:0},
+    {name:'ইলিয়াস',   meals:56.03, bazar:0},
+    {name:'নোমান',     meals:30.91, bazar:2281},
+    {name:'মাজিদ',     meals:30.11, bazar:2281},
+    {name:'রাজন',      meals:9.16,  bazar:3440},
+    {name:'ইমরান',     meals:34.06, bazar:1755},
+  ].forEach(s=>addMember(s.name,s.meals,s.bazar));
+
+  // Default categories
+  categories = []; cidx = 0;
+  [
+    {name:'খালা (ভাড়া)', gv:572},
+    {name:'নেট', gv:120},
+    {name:'বিদ্যুৎ', gv:29},
+    {name:'গ্যাস', gv:150},
+    {name:'বিড়ি/এক্সট্রা', gv:0},
+  ].forEach(c=>{cidx++;categories.push({id:cidx,name:c.name,globalVal:c.gv});});
+  // Tips is different per member — নোমান ও মাজিদ = 1915, বাকি = 1815
+  cidx++;
+  categories.push({id:cidx,name:'টিপস',globalVal:1815});
+
+  renderCatList();
+  renderGlobalInputs();
+  // Will be rendered after calcS1
+  alert('Sample data loaded! Stage 1 হিসাব করুন তারপর Fixed cost এ গিয়ে "সবার উপর প্রয়োগ" করুন।');
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', ()=>{
+  updateLabel();
+  // Default categories
+  [{name:'ভাড়া',gv:0},{name:'বিদ্যুৎ',gv:0},{name:'গ্যাস',gv:0},{name:'যাতায়াত',gv:0},{name:'টিপস',gv:0},{name:'Extra',gv:0}]
+    .forEach(c=>{cidx++;categories.push({id:cidx,name:c.name,globalVal:c.gv});});
+  renderCatList();
+  renderGlobalInputs();
+});
+</script>
+</body>
+</html>
