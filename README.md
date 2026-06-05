@@ -99,17 +99,55 @@ open index.html
 
 ---
 
-## 📋 ব্যবহারের নিয়ম
+## 📋 ব্যবহারের নিয়ম (Advanced Guide)
 
-১. **মাস ও মেসের নাম** দিন উপরের bar-এ
-২. **Stage 1** → সদস্যদের নাম, খাবার বেলা ও বাজার খরচ লিখুন → Calculate চাপুন
-৩. **Stage 2** → Category যোগ করুন (ভাড়া, বিদ্যুৎ ইত্যাদি) → Fixed খরচ দিন → Calculate চাপুন
-৪. **Stage 3** → Adjusted হিসাব দেখুন → Next চাপুন
-৫. **Stage 4** → চূড়ান্ত payment দেখুন
-৬. **Stage 5** → Report তৈরি করুন এবং Print বা Download করুন
+### 🔑 Initial Setup
+- উপরের bar‑এ **মাস ও মেসের নাম** লিখুন  
+- Currency নির্বাচন করুন: ৳ BDT, $ USD, ₹ INR  
+- চাইলে demo data লোড করতে **📥 Sample** বাটন চাপুন  
 
-> 💡 **টিপস:** "📥 Sample" বাটন চাপলে demo data লোড হবে, সহজে বুঝতে পারবেন।
+---
 
+### 🥘 Stage 1 — বাজার ও খাবার হিসাব
+1. প্রতিটি সদস্যের নাম লিখুন  
+2. খাবার বেলা (meal count) ইনপুট দিন  
+3. বাজার খরচ লিখুন  
+4. **Calculate** চাপুন  
+
+**Calculation Flow:**  
+- মোট বাজার খরচ → `Total Bazar`  
+- প্রতি বেলার rate → `Meal Rate = Total Bazar ÷ Total Meals`  
+- প্রত্যেকের meal cost → `Member Meals × Meal Rate`  
+- Balance → `Bazar − Meal Cost`  
+
+**Validation:**  
+- Balance এর যোগফল সবসময় শূন্য হবে  
+- ভুল ইনপুট দিলে error alert দেখাবে  
+
+---
+
+### ⚡ Stage 2 — Fixed মাসিক খরচ
+1. Category তৈরি করুন (ভাড়া, বিদ্যুৎ, গ্যাস, ইন্টারনেট ইত্যাদি)  
+2. প্রতিটি সদস্যের জন্য আলাদা fixed খরচ দিন  
+3. অথবা **Global Apply** দিয়ে সবার জন্য একসাথে খরচ সেট করুন  
+4. **Calculate** চাপুন  
+
+**Tip:** Category নাম কাস্টমাইজ করা যায়  
+
+---
+
+### 🔄 Stage 3 — Adjusted হিসাব
+- সূত্র: `Adjusted = Stage 1 Balance − Fixed Cost`  
+- এখানে দেখা যাবে প্রতিটি সদস্যের **Net অবস্থান**  
+- Negative মান → দিতে হবে  
+- Positive মান → পাবে  
+
+---
+
+### 💰 Stage 4 — চূড়ান্ত হিসাব
+- Adjusted amount অনুযায়ী কে কত টাকা **দেবে** এবং কে কত টাকা **পাবে** তার তালিকা  
+- **Payment Flow** স্পষ্টভাবে দেখানো হবে  
+- এক ক্লিকে summary দেখা যায়
 ---
 
 ## 📁 Project Structure
